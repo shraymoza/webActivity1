@@ -1,9 +1,9 @@
-import { Card, Container } from 'react-bootstrap'
+import { Container, Card } from 'react-bootstrap'
 
 function Contact() {
     return (
         <div className="bg-light py-5" style={{ minHeight: '90vh' }}>
-            <Container className="d-flex justify-content-center align-items-center h-100">
+            <Container className="d-flex justify-content-center align-items-center">
                 <Card className="p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
                     <Card.Body>
                         <Card.Title className="text-center mb-3">Contact Us</Card.Title>
