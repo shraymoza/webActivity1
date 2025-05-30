@@ -16,5 +16,11 @@
     "url": "https://github.com/shraymoza/webActivity1/issues"
   },
   "homepage": "https://github.com/shraymoza/webActivity1#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "bootstrap": "^5.3.6",
+    "bootstrap-icons": "^1.13.1",
+    "react-bootstrap": "^2.10.10",
+    "react-router-dom": "^7.6.1"
+  }
 }
