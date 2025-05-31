@@ -8,7 +8,7 @@ function Home() {
             <Container fluid="lg">
                 <Row className="align-items-center">
                     <Col xs={12} md={6}>
-                        <h1 className="fw-bold">Welcome to ProdManage</h1>
+                        <h1 className="fw-bold">Welcome to Shray's Product Manager</h1>
                         <p>
                             Effortlessly manage your products with our all-in-one tool. Create, view, edit,
                             and delete products — fast, simple, and reliable.

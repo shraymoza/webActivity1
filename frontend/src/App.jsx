@@ -9,7 +9,7 @@ function App() {
         <Router>
             <Navbar bg="light" expand="lg" className="shadow-sm">
                 <Container>
-                    <Navbar.Brand as={Link} to="/">ProdManage</Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/">Product Manager</Navbar.Brand>
                     <Nav className="ms-auto">
                         <Nav.Link as={Link} to="/">Home</Nav.Link>
                         <Nav.Link as={Link} to="/products">Products</Nav.Link>
