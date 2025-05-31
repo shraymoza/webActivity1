@@ -7,9 +7,9 @@ function Contact() {
                 <Card className="p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
                     <Card.Body>
                         <Card.Title className="text-center mb-3">Contact Us</Card.Title>
-                        <p><strong>Address:</strong> 123 React Street, UI City, CA 90210</p>
-                        <p><strong>Email:</strong> hello@prodmanage.com</p>
-                        <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                        <p><strong>Address:</strong> 1333 south park street, halifax</p>
+                        <p><strong>Email:</strong> jane.doe@prodmanage.com</p>
+                        <p><strong>Phone:</strong> 911</p>
                     </Card.Body>
                 </Card>
             </Container>

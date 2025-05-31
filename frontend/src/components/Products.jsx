@@ -1,10 +1,18 @@
-
 import { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import { BsTrash, BsPencil } from 'react-icons/bs'
+import AddProduct from './AddProduct'
 
 function Products() {
     const [products, setProducts] = useState([])
+    const [show, setShow] = useState(false)
+
+    const [newProduct, setNewProduct] = useState({
+        name: '',
+        description: '',
+        price: '',
+        image: '',
+    })
 
     useEffect(() => {
         setProducts([
@@ -33,12 +41,40 @@ function Products() {
         )
     }, [])
 
+    const handleClose = () => {
+        setShow(false)
+        setNewProduct({ name: '', description: '', price: '', image: '' })
+    }
+
+    const handleShow = () => setShow(true)
+
+    const handleAddProduct = () => {
+        const productToAdd = {
+            ...newProduct,
+            id: Date.now(),
+            price: parseFloat(newProduct.price),
+        }
+        setProducts(prev => [productToAdd, ...prev])
+        handleClose()
+    }
+
     return (
         <Container fluid="lg" className="mt-5">
             <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h2 className="fw-bold m-0">Products</h2>
-                <Button variant="primary">Add Product</Button>
+                <Button variant="primary" onClick={handleShow}>Add Product</Button>
             </div>
+
+            {/* Modal from separate file */}
+            <AddProduct
+                show={show}
+                handleClose={handleClose}
+                handleAdd={handleAddProduct}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+            />
+
+            {/* Product Cards */}
             <Row>
                 {products.map((product) => (
                     <Col xs={12} sm={6} md={4} key={product.id} className="mb-4">
@@ -68,4 +104,3 @@ function Products() {
 }
 
 export default Products
-
