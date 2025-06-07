@@ -1,13 +1,9 @@
-// src/redux/store.js
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';      // ← fixed import
-import rootReducer from './productReducer';   // adjust the path if your root reducer has a different name
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
+import { productReducer } from './productReducer';
 
-// enable the Redux DevTools extension if it’s installed
-const composeEnhancers =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const rootReducer = combineReducers({
+    products: productReducer,  // ← key matches the slice name you use with useSelector
+});
 
-export const store = createStore(
-    rootReducer,
-    composeEnhancers(applyMiddleware(thunk))
-);
+export const store = createStore(rootReducer, applyMiddleware(thunk));

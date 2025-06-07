@@ -28,4 +28,24 @@ export const createProduct = body => async dispatch => {
     }
 };
 
+export const updateProduct = body => async dispatch => {
+    dispatch({ type: UPDATE_REQUEST });
+    try {
+        const { data } = await api.post('/products', body);
+        dispatch({ type: UPDATE_SUCCESS, payload: data });
+    } catch (err) {
+        dispatch({ type: UPDATE_FAIL, payload: err.response?.data?.message || err.message });
+    }
+};
+
+export const deleteProduct = body => async dispatch => {
+    dispatch({ type: DELETE_REQUEST });
+    try {
+        const { data } = await api.post('/products', body);
+        dispatch({ type: DELETE_SUCCESS, payload: data });
+    } catch (err) {
+        dispatch({ type: DELETE_FAIL, payload: err.response?.data?.message || err.message });
+    }
+};
+
 /* updateProduct & deleteProduct follow the same pattern */
