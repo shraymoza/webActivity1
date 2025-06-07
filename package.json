@@ -18,9 +18,14 @@
   "homepage": "https://github.com/shraymoza/webActivity1#readme",
   "description": "",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
     "bootstrap": "^5.3.6",
     "bootstrap-icons": "^1.13.1",
     "react-bootstrap": "^2.10.10",
-    "react-router-dom": "^7.6.1"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.6.1",
+    "react-toastify": "^11.0.5",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0"
   }
 }
