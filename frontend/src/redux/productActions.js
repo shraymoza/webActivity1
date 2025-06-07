@@ -48,4 +48,3 @@ export const deleteProduct = body => async dispatch => {
     }
 };
 
-/* updateProduct & deleteProduct follow the same pattern */
