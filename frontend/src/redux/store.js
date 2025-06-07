@@ -1,6 +1,13 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
-import { productReducer } from './productReducer';
+// src/redux/store.js
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';      // ← fixed import
+import rootReducer from './productReducer';   // adjust the path if your root reducer has a different name
 
-const root = combineReducers({ products: productReducer });
-export const store = createStore(root, applyMiddleware(thunk));
+// enable the Redux DevTools extension if it’s installed
+const composeEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+export const store = createStore(
+    rootReducer,
+    composeEnhancers(applyMiddleware(thunk))
+);
