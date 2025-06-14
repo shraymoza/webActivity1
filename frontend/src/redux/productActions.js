@@ -55,7 +55,7 @@ export const deleteProduct = id => async dispatch => {
     dispatch({ type: DELETE_REQUEST });
     try {
         await api.delete(`/products/${id}`);
-        dispatch({ type: DELETE_SUCCESS, payload: id });   
+        dispatch({ type: DELETE_SUCCESS, payload: id });
     } catch (err) {
         dispatch({
             type: DELETE_FAIL,
