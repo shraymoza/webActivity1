@@ -8,8 +8,7 @@ import {
 
 const api = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL || 'https://webactivity1.onrender.com'}/api`,
-    withCredentials: true,   // keep if you ever add auth cookies / sessions
-    timeout: 10000,          // fail fast instead of hanging forever
+    timeout: 10000,
 });
 
 export const fetchProducts = () => async dispatch => {
