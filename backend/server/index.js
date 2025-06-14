@@ -1,54 +1,85 @@
-// /server/index.js
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-mongoose.connect('mongodb+srv://shray:Shray@97@cluster0.ypzpcbp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => console.log("MongoDB Connected"))
-    .catch(err => console.error(err));
+// Load environment variables
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// In‑memory store (id is Date.now()).
-let products = [];
+// Connect to MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
-/* CREATE */
-app.post('/api/products', (req, res) => {
-    const { title, description, image, price } = req.body;
-    if (!title || !image || !description || !price)
-        return res.status(400).json({ message: 'All fields required' });
-    const newProd = { id: Date.now(), title, description, image, price };
-    products.unshift(newProd);
-    return res.status(201).json(newProd);
+// Define schema + model
+const productSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+    image: String,
+    price: Number
+});
+const Product = mongoose.model('Product', productSchema);
+
+// CREATE
+app.post('/api/products', async (req, res) => {
+    try {
+        const newProduct = new Product(req.body);
+        const savedProduct = await newProduct.save();
+        res.status(201).json(savedProduct);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
 });
 
-/* READ ALL */
-app.get('/api/products', (_req, res) => res.json(products));
-
-/* READ ONE */
-app.get('/api/products/:id', (req, res) => {
-    const found = products.find(p => p.id === +req.params.id);
-    return found ? res.json(found) : res.status(404).json({ message: 'Not found' });
+// READ ALL
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await Product.find();
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
-/* UPDATE */
-app.put('/api/products/:id', (req, res) => {
-    const i = products.findIndex(p => p.id === +req.params.id);
-    if (i === -1) return res.status(404).json({ message: 'Not found' });
-    products[i] = { ...products[i], ...req.body };
-    return res.json(products[i]);
+// READ ONE
+app.get('/api/products/:id', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Not Found' });
+        res.json(product);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
-/* DELETE */
-app.delete('/api/products/:id', (req, res) => {
-    const i = products.findIndex(p => p.id === +req.params.id);
-    if (i === -1) return res.status(404).json({ message: 'Not found' });
-    const removed = products.splice(i, 1);
-    return res.json(removed[0]);
+// UPDATE
+app.put('/api/products/:id', async (req, res) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        res.json(updatedProduct);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// DELETE
+app.delete('/api/products/:id', async (req, res) => {
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+        res.json(deletedProduct);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
 app.listen(4000, () => console.log('API ready on http://localhost:4000'));
