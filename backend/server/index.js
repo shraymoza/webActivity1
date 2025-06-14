@@ -82,4 +82,5 @@ app.delete('/api/products/:id', async (req, res) => {
     }
 });
 
-app.listen(4000, () => console.log('API ready on http://localhost:4000'));
+const PORT = process.env.PORT || 4000;   // ←  Render injects PORT
+app.listen(PORT, () => console.log(`API ready on :${PORT}`));

@@ -6,7 +6,11 @@ import {
     DELETE_REQUEST, DELETE_SUCCESS, DELETE_FAIL,
 } from './productTypes';
 
-const api = axios.create({ baseURL: 'http://localhost:4000/api' });
+const api = axios.create({
+    baseURL: `${import.meta.env.VITE_API_URL || 'https://webactivity1.onrender.com'}/api`,
+    withCredentials: true,   // keep if you ever add auth cookies / sessions
+    timeout: 10000,          // fail fast instead of hanging forever
+});
 
 export const fetchProducts = () => async dispatch => {
     dispatch({ type: READ_REQUEST });
@@ -18,16 +22,21 @@ export const fetchProducts = () => async dispatch => {
     }
 };
 
+// ── Create ─────────────────────────────────────────────────
 export const createProduct = body => async dispatch => {
     dispatch({ type: CREATE_REQUEST });
     try {
         const { data } = await api.post('/products', body);
         dispatch({ type: CREATE_SUCCESS, payload: data });
     } catch (err) {
-        dispatch({ type: CREATE_FAIL, payload: err.response?.data?.message || err.message });
+        dispatch({
+            type: CREATE_FAIL,
+            payload: err.response?.data?.message || err.message,
+        });
     }
 };
 
+// ── Update ─────────────────────────────────────────────────
 export const updateProduct = (id, body) => async dispatch => {
     dispatch({ type: UPDATE_REQUEST });
     try {
@@ -41,11 +50,12 @@ export const updateProduct = (id, body) => async dispatch => {
     }
 };
 
+// ── Delete ─────────────────────────────────────────────────
 export const deleteProduct = id => async dispatch => {
     dispatch({ type: DELETE_REQUEST });
     try {
         await api.delete(`/products/${id}`);
-        dispatch({ type: DELETE_SUCCESS, payload: id });   // reducer expects id
+        dispatch({ type: DELETE_SUCCESS, payload: id });   
     } catch (err) {
         dispatch({
             type: DELETE_FAIL,
@@ -53,4 +63,3 @@ export const deleteProduct = id => async dispatch => {
         });
     }
 };
-
