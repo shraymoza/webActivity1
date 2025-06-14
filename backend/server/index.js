@@ -1,6 +1,13 @@
 // /server/index.js
 import express from 'express';
 import cors from 'cors';
+import mongoose from 'mongoose';
+
+mongoose.connect('mongodb+srv://shray:Shray@97@cluster0.ypzpcbp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log("MongoDB Connected"))
+    .catch(err => console.error(err));
 
 const app = express();
 app.use(cors());
