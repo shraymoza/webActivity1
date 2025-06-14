@@ -11,11 +11,14 @@ const api = axios.create({
     timeout: 10000,
 });
 
+const toClient = p => ({ ...p, id: p._id });
+
+// ── Read all ────────────────────────────────────────────────
 export const fetchProducts = () => async dispatch => {
     dispatch({ type: READ_REQUEST });
     try {
         const { data } = await api.get('/products');
-        dispatch({ type: READ_SUCCESS, payload: data });
+        dispatch({ type: READ_SUCCESS, payload: data.map(toClient) });
     } catch (err) {
         dispatch({ type: READ_FAIL, payload: err.message });
     }
@@ -26,7 +29,7 @@ export const createProduct = body => async dispatch => {
     dispatch({ type: CREATE_REQUEST });
     try {
         const { data } = await api.post('/products', body);
-        dispatch({ type: CREATE_SUCCESS, payload: data });
+        dispatch({ type: CREATE_SUCCESS, payload: toClient(data) });
     } catch (err) {
         dispatch({
             type: CREATE_FAIL,
@@ -40,7 +43,7 @@ export const updateProduct = (id, body) => async dispatch => {
     dispatch({ type: UPDATE_REQUEST });
     try {
         const { data } = await api.put(`/products/${id}`, body);
-        dispatch({ type: UPDATE_SUCCESS, payload: data });
+        dispatch({ type: UPDATE_SUCCESS, payload: toClient(data) });
     } catch (err) {
         dispatch({
             type: UPDATE_FAIL,
