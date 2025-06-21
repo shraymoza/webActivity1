@@ -20,7 +20,7 @@ router.get('/', protect, async (req, res) => {
     const limit   = Number(req.query.limit)  || 10;
     const sort    =            req.query.sort    || '-createdAt';
     const keyword = req.query.keyword
-        ? { name: { $regex: req.query.keyword, $options: 'i' } }
+        ? { title: { $regex: req.query.keyword, $options: 'i' } }
         : {};
 
     try {

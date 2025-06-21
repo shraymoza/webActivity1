@@ -10,7 +10,9 @@ import { api } from './authActions';
 // Map MongoDB’s _id to a friendlier id for the UI
 const toClient = product => ({ ...product, id: product._id });
 
-
+/* ────────────────────────────────────────────────────────────────
+   GET
+   ---------------------------------------------------------------- */
 export const fetchProducts = (query = {}) => async dispatch => {
     dispatch({ type: READ_REQUEST });
     try {
