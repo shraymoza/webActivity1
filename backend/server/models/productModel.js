@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema(
             required: [true, 'Product title is required'],
         },
         image: {
-            type: String,                   // optional; keep it for the card img
+            type: String,
         },
         description: {
             type: String,

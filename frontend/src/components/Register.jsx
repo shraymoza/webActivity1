@@ -24,14 +24,14 @@ function Register() {
 
     const { loading, error, token } = useSelector(state => state.auth);
 
-    /* If a token already exists (user just registered or is logged-in), head to /home */
+    /* If a token already exists
     React.useEffect(() => {
         if (token) navigate('/home');
     }, [token, navigate]);
 
     /* Handle submit via Redux thunk */
     const handleSubmit = values => {
-        const { confirmPassword, ...body } = values; // strip confirmPassword
+        const { confirmPassword, ...body } = values;
         dispatch(register(body));
     };
 
