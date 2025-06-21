@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
     CREATE_REQUEST, CREATE_SUCCESS, CREATE_FAIL,
     READ_REQUEST,   READ_SUCCESS,   READ_FAIL,
@@ -6,25 +5,28 @@ import {
     DELETE_REQUEST, DELETE_SUCCESS, DELETE_FAIL,
 } from './productTypes';
 
-const api = axios.create({
-    baseURL: `${import.meta.env.VITE_API_URL || 'https://webactivity1.onrender.com'}/api`,
-    timeout: 10000,
-});
+import { api } from './authActions';
 
-const toClient = p => ({ ...p, id: p._id });
+// Map MongoDB’s _id to a friendlier id for the UI
+const toClient = product => ({ ...product, id: product._id });
 
-// ── Read all ────────────────────────────────────────────────
-export const fetchProducts = () => async dispatch => {
+
+export const fetchProducts = (query = {}) => async dispatch => {
     dispatch({ type: READ_REQUEST });
     try {
-        const { data } = await api.get('/products');
+        const { data } = await api.get('/products', { params: query });
         dispatch({ type: READ_SUCCESS, payload: data.map(toClient) });
     } catch (err) {
-        dispatch({ type: READ_FAIL, payload: err.message });
+        dispatch({
+            type   : READ_FAIL,
+            payload: err.response?.data?.message || err.message,
+        });
     }
 };
 
-// ── Create ─────────────────────────────────────────────────
+/* ────────────────────────────────────────────────────────────────
+   CREATE
+   ---------------------------------------------------------------- */
 export const createProduct = body => async dispatch => {
     dispatch({ type: CREATE_REQUEST });
     try {
@@ -32,13 +34,15 @@ export const createProduct = body => async dispatch => {
         dispatch({ type: CREATE_SUCCESS, payload: toClient(data) });
     } catch (err) {
         dispatch({
-            type: CREATE_FAIL,
+            type   : CREATE_FAIL,
             payload: err.response?.data?.message || err.message,
         });
     }
 };
 
-// ── Update ─────────────────────────────────────────────────
+/* ────────────────────────────────────────────────────────────────
+   UPDATE
+   ---------------------------------------------------------------- */
 export const updateProduct = (id, body) => async dispatch => {
     dispatch({ type: UPDATE_REQUEST });
     try {
@@ -52,7 +56,9 @@ export const updateProduct = (id, body) => async dispatch => {
     }
 };
 
-// ── Delete ─────────────────────────────────────────────────
+/* ────────────────────────────────────────────────────────────────
+   DELETE
+   ---------------------------------------------------------------- */
 export const deleteProduct = id => async dispatch => {
     dispatch({ type: DELETE_REQUEST });
     try {

@@ -3,6 +3,9 @@ import { Container, Card, Form, Button } from 'react-bootstrap';
 import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../redux/authActions';
+import { Alert, Spinner } from 'react-bootstrap';
 
 // Yup validation schema
 const validationSchema = Yup.object({
@@ -18,7 +21,6 @@ const validationSchema = Yup.object({
 });
 
 function Register() {
-    const navigate = useNavigate(); // <-- navigation hook
 
     const initialValues = {
         fullName: '',
@@ -28,12 +30,13 @@ function Register() {
         confirmPassword: '',
     };
 
-    const handleSubmit = (values, { resetForm }) => {
-        console.log('Registration Successful:', values);
-        alert('Registration Successful!');
-        resetForm();
-        navigate('/home'); // <-- redirect to home after successful registration
-    };
+    const dispatch  = useDispatch();
+    const navigate  = useNavigate();
+    const { loading, error, token } = useSelector(s => s.auth);
+
+    React.useEffect(() => { if (token) navigate('/home'); }, [token]);
+
+    const handleSubmit = values => dispatch(register(values));
 
     return (
         <div className="bg-light py-5" style={{ minHeight: '100vh' }}>
