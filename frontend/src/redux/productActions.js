@@ -15,7 +15,15 @@ export const fetchProducts = (query = {}) => async dispatch => {
     dispatch({ type: READ_REQUEST });
     try {
         const { data } = await api.get('/products', { params: query });
-        dispatch({ type: READ_SUCCESS, payload: data.map(toClient) });
+
+        // Accept both possible response shapes  ➜ productsArr becomes an array
+        const productsArr = Array.isArray(data)         ? data
+            : Array.isArray(data.data)      ? data.data
+                : [];
+
+        // Optionally keep pagination meta in state later
+        dispatch({ type: READ_SUCCESS, payload: productsArr.map(toClient) });
+
     } catch (err) {
         dispatch({
             type   : READ_FAIL,
@@ -23,6 +31,7 @@ export const fetchProducts = (query = {}) => async dispatch => {
         });
     }
 };
+
 
 /* ────────────────────────────────────────────────────────────────
    CREATE
