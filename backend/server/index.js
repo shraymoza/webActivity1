@@ -5,12 +5,19 @@ import express from 'express';
 import swaggerDocs from './swagger.js';
 import authRoutes    from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import express from 'express';
+import cors     from 'cors';
+import { corsOptions } from './corsOptions.js';
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+
+// CORS BEFORE any route/middleware that needs it
+app.use(cors(corsOptions));
 
 // ───────── DB connect ─────────
 mongoose
