@@ -4,6 +4,22 @@ import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary:      Create a new product
+ *     tags:         [Products]
+ *     security:     [bearerAuth: []]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/Product' }
+ *     responses:
+ *       201:
+ *         description: Product created
+ */
 /* ───────── CREATE ───────── */
 router.post('/', protect, async (req, res) => {
     try {
@@ -14,6 +30,32 @@ router.post('/', protect, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: Product management
+ */
+
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary:      Retrieve all products
+ *     tags:         [Products]
+ *     responses:
+ *       200:
+ *         description: A JSON array of product objects
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean }
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/Product' }
+ */
 /* ───────── READ all (pagination + search + sort) ───────── */
 router.get('/', protect, async (req, res) => {
     const page    = Number(req.query.page)   || 1;

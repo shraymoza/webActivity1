@@ -7,6 +7,20 @@ const router = express.Router();
 // Helper
 const genToken = id => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags:   [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/User' }
+ *     responses:
+ *       201: { description: User created }
+ */
 /* ───────── REGISTER ───────── */
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
