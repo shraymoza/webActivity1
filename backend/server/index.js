@@ -1,7 +1,5 @@
-import cors     from 'cors';
 import mongoose from 'mongoose';
 import dotenv   from 'dotenv';
-import express from 'express';
 import swaggerDocs from './swagger.js';
 import authRoutes    from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
