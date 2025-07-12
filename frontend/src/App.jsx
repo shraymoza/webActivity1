@@ -4,25 +4,26 @@ import {
     Routes,
     Route,
     Link,
-    Navigate,
 } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import Home      from './components/Home';
-import Products  from './components/Products';
-import Contact   from './components/Contact';
-import Register  from './components/Register';
-import Login     from './components/Login';
+import { lazy, Suspense } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { logout } from './redux/authActions';
+import ProtectedRoute from './components/ProtectedRoute';
+import Loader         from './components/Loader';
+import { logout }     from './redux/authActions';
 
-const PrivateRoute = ({ element }) => {
-    const token = useSelector(state => state.auth.token);
-    return token ? element : <Navigate to="/login" replace />;
-};
+// ─── Lazy-loaded pages ────────────────────────────────────────────────
+const Home     = lazy(() => import('./components/Home'));
+const Products = lazy(() => import('./components/Products'));
+const Contact  = lazy(() => import('./components/Contact'));
+const Register = lazy(() => import('./components/Register'));
+const Login    = lazy(() => import('./components/Login'));
+// ──────────────────────────────────────────────────────────────────────
 
 function App() {
-    const dispatch   = useDispatch();
-    const { token }  = useSelector(state => state.auth);
+    const dispatch      = useDispatch();
+    const { token }     = useSelector((state) => state.auth);
+    const handleLogout = () => dispatch(logout());
 
     return (
         <Router>
@@ -30,36 +31,63 @@ function App() {
                 <Container>
                     <Navbar.Brand as={Link} to="/">Product Manager</Navbar.Brand>
 
-                    <Navbar.Toggle aria-controls="nav-collapse" />
-                    <Navbar.Collapse id="nav-collapse">
-                        <Nav className="ms-auto">
-                            {token ? (
+                    <Navbar.Toggle aria-controls="main-nav" />
+                    <Navbar.Collapse id="main-nav">
+                        <Nav className="me-auto">
+                            {token && (
                                 <>
                                     <Nav.Link as={Link} to="/home">Home</Nav.Link>
                                     <Nav.Link as={Link} to="/products">Products</Nav.Link>
                                     <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
-                                    <Nav.Link onClick={() => dispatch(logout())}>Logout</Nav.Link>
                                 </>
+                            )}
+                        </Nav>
+
+                        <Nav>
+                            {token ? (
+                                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
                             ) : (
-                                <>
-                                    <Nav.Link as={Link} to="/">Register</Nav.Link>
-                                    <Nav.Link as={Link} to="/login">Login</Nav.Link>
-                                </>
+                                <Nav.Link as={Link} to="/login">Login</Nav.Link>
                             )}
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
 
-            <Routes>
-                {/* Public routes */}
-                <Route path="/"        element={<Register />} />
-                <Route path="/login"   element={<Login />}   />
-                {/* Protected routes */}
-                <Route path="/home"     element={<PrivateRoute element={<Home />}     />} />
-                <Route path="/products" element={<PrivateRoute element={<Products />} />} />
-                <Route path="/contact"  element={<PrivateRoute element={<Contact />}  />} />
-            </Routes>
+            {/* All routes behind a single Suspense boundary */}
+            <Suspense fallback={<Loader full />}>
+                <Routes>
+                    {/* Public */}
+                    <Route path="/"       element={<Register />} />
+                    <Route path="/login"  element={<Login />}   />
+
+                    {/* Private */}
+                    <Route
+                        path="/home"
+                        element={
+                            <ProtectedRoute>
+                                <Home />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/products"
+                        element={
+                            <ProtectedRoute>
+                                <Products />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/contact"
+                        element={
+                            <ProtectedRoute>
+                                <Contact />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </Suspense>
         </Router>
     );
 }
